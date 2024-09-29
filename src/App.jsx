@@ -20,13 +20,13 @@ function App() {
         <Route path="/" Component={LandingPage} />
         <Route path="/login" Component={LoginPage} />
         <Route path="/home" Component={HomePage} />
-        <Route path="/event-page" Component={EventPage} />
-        <Route path="/cospace-page" Component={CospacePage} />
+        <Route path="/ruang-acara" Component={EventPage} />
+        <Route path="/cospace" Component={CospacePage} />
         <Route path="/ruang-meeting" Component={MeetingPage} />
         <Route path="/register" Component={RegisterPage} />
         <Route path="/order" Component={OrderPage} />
         <Route path="/payment" Component={PaymentPage} />
-        <Route path="/sukses" Component={SuccessPage} />
+        <Route path="/success" Component={SuccessPage} />
       </Routes>
     </>
   )

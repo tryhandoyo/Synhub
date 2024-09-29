@@ -13,6 +13,49 @@ const MeetingPage = () => {
     setJumlah(parseInt(event.target.value));
   };
 
+  // handle waktu mulai dan selesai
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const times = [
+    "09.00",
+    "10.00",
+    "11.00",
+    "12.00",
+    "13.00",
+    "14.00",
+    "15.00",
+    "16.00",
+    "17.00",
+  ];
+
+  const handleStartTimeChange = (e) => {
+    setStartTime(e.target.value);
+    setEndTime(""); //reset endTime saat waktu mulai berubah
+  };
+
+  const handleEndTimeChange = (e) => {
+    setEndTime(e.target.value);
+  };
+
+  const availableEndTimes = times.filter((time) => time > startTime);
+
+  //handle metode pembayaran
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const handlePaymentMethodChange = (e) => {
+    setPaymentMethod(e.target.value);
+  };
+
+  // menghitung total waktu dan biaya
+  const calculateDuration = () => {
+    if (!startTime || !endTime) return 0;
+    const startHour = parseInt(startTime.split(":")[0]);
+    const endHour = parseInt(endTime.split(":")[0]);
+    return endHour - startHour;
+  };
+
+  const duration = calculateDuration();
+  const totalCost = duration * 80000;
+
   return (
     <>
       <NavbarComponent isLoggedIn={true} />
@@ -69,11 +112,12 @@ const MeetingPage = () => {
               <Row>
                 <Col lg={4}>
                   <Form.Group>
-                    <Form.Label>Nama Pesanan</Form.Label>
+                    <Form.Label>Nama Pemesan</Form.Label>
                     <Form.Control
                       type="text"
-                      name="nama-pesanan"
+                      name="nama-pemesan"
                       placeholder="cth. ahmad fulan"
+                      required
                     />
                   </Form.Group>
                 </Col>
@@ -84,6 +128,7 @@ const MeetingPage = () => {
                       type="text"
                       name="telpon"
                       placeholder="cth. 081234567890"
+                      required
                     />
                   </Form.Group>
                 </Col>
@@ -96,6 +141,7 @@ const MeetingPage = () => {
                       type="text"
                       name="nama-perusahaan"
                       placeholder="cth. PT. ABC"
+                      required
                     />
                   </Form.Group>
                 </Col>
@@ -109,6 +155,7 @@ const MeetingPage = () => {
                       value={jumlah}
                       onChange={handleJumlahChange}
                       max={10}
+                      required
                     />
                   </Form.Group>
                 </Col>
@@ -116,7 +163,7 @@ const MeetingPage = () => {
             </div>
 
             <div className="info-meeting mt-5">
-              <h5 className="title">INFORMASI MEETING</h5>
+              <h5 className="title">Informasi Meeting</h5>
               <Row>
                 <Col lg={4}>
                   <Form.Group>
@@ -127,20 +174,30 @@ const MeetingPage = () => {
                 <Col lg={2}>
                   <Form.Group>
                     <Form.Label>Waktu Mulai</Form.Label>
-                    <Form.Select>
-                      <option value="09.00">09.00</option>
-                      <option value="10.00">10.00</option>
-                      <option value="11.00">11.00</option>
+                    <Form.Select onChange={handleStartTimeChange} required>
+                      <option>--</option>
+                      {times.map((time, index) => (
+                        <option value={time} key={index}>
+                          {time}
+                        </option>
+                      ))}
                     </Form.Select>
                   </Form.Group>
                 </Col>
                 <Col lg={2}>
                   <Form.Group>
                     <Form.Label>Sampai</Form.Label>
-                    <Form.Select>
-                      <option value="09.00">09.00</option>
-                      <option value="10.00">10.00</option>
-                      <option value="11.00">11.00</option>
+                    <Form.Select
+                      onChange={handleEndTimeChange}
+                      disabled={!startTime}
+                      required
+                    >
+                      <option>--</option>
+                      {availableEndTimes.map((time, index) => (
+                        <option value={time} key={index}>
+                          {time}
+                        </option>
+                      ))}
                     </Form.Select>
                   </Form.Group>
                 </Col>
@@ -162,7 +219,7 @@ const MeetingPage = () => {
                 <Col lg={4}>
                   <Form.Group>
                     <Form.Label>Metode Pembayaran</Form.Label>
-                    <Form.Select>
+                    <Form.Select onChange={handlePaymentMethodChange} required>
                       <option value="">--Pilih Metode--</option>
                       <option value="transfer">Transfer Bank</option>
                       <option value="tunai">Tunai</option>
@@ -173,12 +230,22 @@ const MeetingPage = () => {
 
               <Row>
                 <Col>
+                  <Form.Label>Ringkasan Pembayaran</Form.Label>
                   <p>
-                    Metode Pembayaran yang dipilih : <b>Cash</b>
+                    Metode Pembayaran yang dipilih : <b>{paymentMethod}</b>
                   </p>
                   <p>
-                    Total Waktu : <b>3 Jam</b> (IDR 500.000)
+                    Total Waktu : <b>{duration}</b> Jam (IDR{" "}
+                    {totalCost.toLocaleString()})
                   </p>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col lg={8}>
+                  <button type="submit" className="btn btn-teal mt-5 w-100">
+                    Reservasi
+                  </button>
                 </Col>
               </Row>
             </div>
@@ -186,8 +253,8 @@ const MeetingPage = () => {
         </Container>
       </div>
 
-      <KontakComponent/>
-      <FooterComponent/>
+      <KontakComponent />
+      <FooterComponent />
     </>
   );
 };
