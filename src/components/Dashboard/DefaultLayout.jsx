@@ -1,4 +1,4 @@
-import { Container, Row, Col, Navbar, Nav } from "react-bootstrap";
+import { Container, Navbar, Nav } from "react-bootstrap";
 import logo from "../../assets/logo.png";
 import {Link} from 'react-router-dom'
 
@@ -13,13 +13,13 @@ const DefaultLayout = ({children}) => {
           <Nav.Link className="text-dark" href="/admin/dashboard">
             Dashboard
           </Nav.Link>
-          <Nav.Link className="text-dark" href="">
+          <Nav.Link className="text-dark" href="/admin/bank">
             Bank
           </Nav.Link>
-          <Nav.Link className="text-dark" href="">
+          <Nav.Link className="text-dark" href="/admin/banner">
             Banner
           </Nav.Link>
-          <Nav.Link className="text-dark" href="">
+          <Nav.Link className="text-dark" href="/admin/facility">
             Facility
           </Nav.Link>
           <Nav.Link className="text-dark" href="/admin/user">

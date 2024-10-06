@@ -2,12 +2,12 @@ import DefaultLayout from "../../../components/Dashboard/DefaultLayout";
 import { Link } from "react-router-dom";
 import { Table, Button } from "react-bootstrap";
 
-const BannerPage = () => {
+const FasilityPage = () => {
   return (
     <DefaultLayout>
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h3>BannerPage</h3>
-        <Link to="/admin/banner/new" className="btn btn-teal">
+        <h3>FacilityPage</h3>
+        <Link to="/admin/facility/new" className="btn btn-teal">
           Add New
         </Link>
       </div>
@@ -16,7 +16,7 @@ const BannerPage = () => {
           <thead className="table-light border">
             <tr>
               <th>No</th>
-              <th>Gambar</th>
+              <th>Nama Fasilitas</th>
               <th>Keterangan</th>
               <th>Action</th>
             </tr>
@@ -28,7 +28,7 @@ const BannerPage = () => {
               <td>Loading...</td>
               <td>
                 <Link
-                  to="/admin/banner/:id"
+                  to="/admin/facility/:id"
                   className="btn btn-info text-white btn-sm mb-1 me-1"
                 >
                   Edit
@@ -42,7 +42,7 @@ const BannerPage = () => {
         </Table>
       </div>
     </DefaultLayout>
-  );
-};
+  )
+}
 
-export default BannerPage;
+export default FasilityPage

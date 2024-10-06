@@ -4,20 +4,21 @@ import { Card, Button, Form} from "react-bootstrap"
 
 const EditUserPage = () => {
   const navigate = useNavigate ();
+
     return (
     <DefaultLayout>
       <h3>Edit User</h3>
       <Card className="p-3">
         <Form>
-          <Form.Group>
+          <Form.Group className="mb-2">
             <Form.Label>Name</Form.Label>
             <Form.Control type="text" placeholder="Masukkan Nama" />
           </Form.Group>
-          <Form.Group>
+          <Form.Group className="mb-2">
             <Form.Label>Email</Form.Label>
             <Form.Control type="email" placeholder="Masukkan Email" />
           </Form.Group>
-          <Form.Group>
+          <Form.Group className="mb-2">
             <Form.Label>Phone</Form.Label>
             <Form.Control type="number" placeholder="Masukkan Nomor Telepon" />
           </Form.Group>

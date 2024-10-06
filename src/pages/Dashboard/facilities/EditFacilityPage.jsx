@@ -1,18 +1,18 @@
-import { useNavigate } from "react-router";
 import DefaultLayout from "../../../components/Dashboard/DefaultLayout";
-import { Form, Button, Card } from "react-bootstrap";
+import { Card, Form, Button } from "react-bootstrap";
+import { useNavigate } from "react-router";
 
-const CreateBannerPage = () => {
+const EditFacilityPage = () => {
   const navigate = useNavigate();
 
   return (
     <DefaultLayout>
-      <h3>New Banner</h3>
+      <h3>Edit Fasilitas</h3>
       <Card className="p-3">
         <Form>
           <Form.Group className="mb-2">
-            <Form.Label>Upload Foto</Form.Label>
-            <Form.Control type="file" />
+            <Form.Label>Nama Fasilitas</Form.Label>
+            <Form.Control type="text" />
           </Form.Group>
           <Form.Group>
             <Form.Label>Keterangan</Form.Label>
@@ -27,7 +27,7 @@ const CreateBannerPage = () => {
           </Button>
           <Button
             className="btn-warning text-white btn-sm mt-3"
-            onClick={() => navigate("/admin/banner")}
+            onClick={() => navigate("/admin/facility")}
           >
             Close
           </Button>
@@ -37,4 +37,4 @@ const CreateBannerPage = () => {
   );
 };
 
-export default CreateBannerPage;
+export default EditFacilityPage;

@@ -17,6 +17,15 @@ import DashboardPage from "../pages/Dashboard/DashboardPage"
 import UserPage from "../pages/Dashboard/users/UserPage"
 import CreateUserPage from "../pages/Dashboard/users/CreateUserPage"
 import EditUserPage from "../pages/Dashboard/users/EditUserPage"
+import BannerPage from "../pages/Dashboard/banners/BannerPage"
+import CreateBannerPage from "../pages/Dashboard/banners/CreateBannerPage"
+import EditBannerPage from "../pages/Dashboard/banners/EditBannerPage"
+import FacilityPage from "../pages/Dashboard/facilities/FasilityPage"
+import CreateFacilityPage from "../pages/Dashboard/facilities/CreateFacilityPage"
+import EditFacilityPage from "../pages/Dashboard/facilities/EditFacilityPage"
+import BankPage from "../pages/Dashboard/banks/BankPage"
+import CreateBankPage from "../pages/Dashboard/banks/CreateBankPage"
+import EditBankPage from "../pages/Dashboard/banks/EditBankPage"
 
 function RouteIndex() {
 
@@ -41,8 +50,18 @@ function RouteIndex() {
         <Route path="/admin/user" element={<UserPage/>}/>
         <Route path="/admin/user/new" element={<CreateUserPage/>}/>
         <Route path="/admin/user/:id" element={<EditUserPage/>}/>
+        {/* fasilitas folder */}
+        <Route path="/admin/facility" element={<FacilityPage/>} />
+        <Route path="/admin/facility/new" element={<CreateFacilityPage/>} />
+        <Route path="/admin/facility/:id" element={<EditFacilityPage/>} />
         {/* banner folder */}
         <Route path="/admin/banner" element={<BannerPage/>}/>
+        <Route path="/admin/banner/new" element={<CreateBannerPage/>}/>
+        <Route path="/admin/banner/:id" element={<EditBannerPage/>}/>
+        {/* bank folder */}
+        <Route path="/admin/bank" element={<BankPage/>}/>
+        <Route path="/admin/bank/new" element={<CreateBankPage/>}/>
+        <Route path="/admin/bank/:id" element={<EditBankPage/>}/>
       </Routes>
     </>
   )
