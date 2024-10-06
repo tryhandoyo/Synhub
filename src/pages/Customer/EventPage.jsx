@@ -163,6 +163,7 @@ const EventPage = () => {
                       min={10}
                       value={jumlah}
                       onChange={handleJumlahChange}
+                      max={150}
                       required
                     />
                   </Form.Group>

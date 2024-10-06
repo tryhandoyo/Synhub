@@ -1,7 +1,6 @@
 import NavbarComponent from "../../components/Customer/NavbarComponent";
 
 import { Container, Row, Col, Form } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import { useState } from "react";
 
 const PaymentPage = () => {
