@@ -1,13 +1,47 @@
 //import komponen
+import { useEffect, useState } from "react";
 import FooterComponent from "../../components/Customer/FooterComponent";
 import KontakComponent from "../../components/Customer/KontakComponent";
 import NavbarComponent from "../../components/Customer/NavbarComponent";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import Api from "../../api";
 
 const HomePage = () => {
+  // ======================= inisialisasi
+  const [produk, setProduk] = useState([]);
+
+  const [banner_1, setBanner_1] = useState({});
+  const [banner_2, setBanner_2] = useState({});
+  const [banner_3, setBanner_3] = useState({});
+  const [banner_4, setBanner_4] = useState({});
+  // ==========================================
+
+  const getDataBanner = async () => {
+    await Api.get("/customer/banner").then((res) => {
+      // console.log(res.data);
+      setBanner_1(res.data.find((item) => item.posisi == "1"));
+      setBanner_2(res.data.find((item) => item.posisi == "2"));
+      setBanner_3(res.data.find((item) => item.posisi == "3"));
+      setBanner_4(res.data.find((item) => item.posisi == "4"));
+    });
+  };
+
+  const getDataProduk = async () => {
+    await Api.get("/customer/produk").then((res) => {
+      // console.log(res.data);
+      setProduk(res.data);
+    });
+  };
+
+  useEffect(() => {
+    getDataBanner();
+    getDataProduk();
+  }, []);
+
   return (
     <>
-      <NavbarComponent isLoggedIn={true}/>
+      <NavbarComponent isLoggedIn={true} />
       <div id="banner">
         <Container>
           <Row>
@@ -25,20 +59,36 @@ const HomePage = () => {
           </Row>
           <Row className="banner-image d-none d-lg-flex align-item-center mt-5">
             <Col lg={5}>
-              <img src="../../src/assets/img-hero1.png" alt="" />
+              <img
+                src={banner_1.foto}
+                // "../../src/assets/img-hero1.png"
+                alt={banner_1.judul}
+              />
             </Col>
             <Col lg={7}>
               <Row>
                 <Col>
-                  <img src="../../src/assets/img-hero2.png" alt="" />
+                  <img
+                    src={banner_2.foto}
+                    // "../../src/assets/img-hero2.png"
+                    alt={banner_2.judul}
+                  />
                 </Col>
               </Row>
               <Row className="mt-4">
                 <Col lg={6}>
-                  <img src="../../src/assets/img-hero3.png" alt="" />
+                  <img
+                    src={banner_3.foto}
+                    // "../../src/assets/img-hero3.png"
+                    alt={banner_3.judul}
+                  />
                 </Col>
                 <Col lg={6}>
-                  <img src="../../src/assets/img-hero4.png" alt="" />
+                  <img
+                    src={banner_4.foto}
+                    // "../../src/assets/img-hero4.png"
+                    alt={banner_4.judul}
+                  />
                 </Col>
               </Row>
             </Col>
@@ -46,7 +96,11 @@ const HomePage = () => {
 
           <Row className="banner-image mt-3 d-lg-none d-block align-items-center">
             <Col>
-              <img src="../../src/assets/img-hero1.png" alt="" />
+              <img
+                src={banner_1.foto}
+                // "../../src/assets/img-hero1.png"
+                alt={banner_1.judul}
+              />
             </Col>
           </Row>
         </Container>
@@ -62,77 +116,39 @@ const HomePage = () => {
             </Col>
           </Row>
           <Row>
-            <Col lg={4}>
-              <Card>
-                <Card.Img
-                  variant="top"
-                  src="../../src/assets/img-rmeeting.png"
-                />
-                <Card.Body>
-                  <Row>
-                    <Col>
-                      <Card.Title>Card Title</Card.Title>
-                    </Col>
-                    <Col>
-                      <p className="text-end">IDR 80K / Jam</p>
-                    </Col>
-                  </Row>
-                  <Card.Text>
-                    Ruang Meeting ideal untuk bisnis dan usaha yang ingin
-                    melakukan pertemuan atau mencari inspirasi bersama.
-                  </Card.Text>
-                  <Button variant="outline-dark">4-10 Kursi</Button>
-                  <Button variant="outline-dark">Free Drink</Button>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col lg={4}>
-              <Card>
-                <Card.Img variant="top" src="../../src/assets/img-racara.png" />
-                <Card.Body>
-                  <Row>
-                    <Col>
-                      <Card.Title>Ruang Acara</Card.Title>
-                    </Col>
-                    <Col>
-                      <p className="text-end">IDR 150K / Jam</p>
-                    </Col>
-                  </Row>
-                  <Card.Text>
-                    Ruang acara untuk Workshop, seminar, dan acara lainnya.
-                    Dilengkapi dengan peralatan pendukung acara.
-                  </Card.Text>
-                  <Button variant="outline-dark">30-50 Kursi</Button>
-                  <Button variant="outline-dark">Event Tools</Button>
-                  <Button variant="outline-dark">Sound System</Button>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col lg={4}>
-              <Card>
-                <Card.Img
-                  variant="top"
-                  src="../../src/assets/img-cospace.png"
-                />
-                <Card.Body>
-                  <Row>
-                    <Col>
-                      <Card.Title>Coworking Space</Card.Title>
-                    </Col>
-                    <Col>
-                      <p className="text-end">IDR 15K / Jam</p>
-                    </Col>
-                  </Row>
-                  <Card.Text>
-                    Pilihan terbaik untuk anda yang ingin mencari inspirasi dan
-                    bekerja dengan nyaman.
-                  </Card.Text>
-                  <Button variant="outline-dark">per- 1 Orang</Button>
-                  <Button variant="outline-dark">Free Drink</Button>
-                  <Button variant="outline-dark">Free Wifi</Button>
-                </Card.Body>
-              </Card>
-            </Col>
+            {produk.length > 0 ? (
+              produk.map((item) => (
+                <Col lg={4}>
+                  <Link to={`/ruangan/${item.slug}`} className="text-decoration-none">
+                    <Card>
+                      <Card.Img variant="top" src={item.foto} />
+                      <Card.Body>
+                        <Row>
+                          <Col>
+                            <Card.Title>{item.judul_pendek}</Card.Title>
+                          </Col>
+                          <Col>
+                            <p className="text-end">
+                              IDR {item.harga / 1000}K / {item.satuan}
+                            </p>
+                          </Col>
+                        </Row>
+                        <Card.Text>{item.deskripsi}</Card.Text>
+                        {/* jika data yang diambil dari api berupa bentuk array maka perlu dilakukan map lagi */}
+                        {/* slice digunakan untuk pembatasan data yang diambil .slice(0,2) ini artinya data yang diambil dibatasi dari data yang pertama atau 0 hingga total data yang didapat 2 */}
+                        {item.fasilitas.slice(0, 2).map((isi) => (
+                          <Button variant="outline-dark">
+                            {isi.keterangan}
+                          </Button>
+                        ))}
+                      </Card.Body>
+                    </Card>
+                  </Link>
+                </Col>
+              ))
+            ) : (
+              <h5>Data Tidak Ditemukan</h5>
+            )}
           </Row>
         </Container>
       </div>

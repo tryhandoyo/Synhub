@@ -6,9 +6,38 @@ import { faCircleUser } from "@fortawesome/free-regular-svg-icons";
 // import gambar logo
 import logo from "../../assets/logo.png";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+
+import Api from "../../api";
+import toast from "react-hot-toast";
 
 const NavbarComponent = ({ isLoggedIn }) => {
+  const token = Cookies.get("token");
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await Api.get("customer/logout", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    })
+    .then((res) => {
+      if(res.data.status == 'berhasil')
+      {
+        toast.success(res.data.message, {
+          duration: 3000,
+          position: "top-center"
+        })
+        Cookies.remove('token');
+        Cookies.remove('name');
+        Cookies.remove('role');
+        Cookies.remove('phone');
+        navigate('/')
+      }
+    })
+  };
+
   return (
     <>
       <Navbar expand="lg" fixed="top" bg="white">
@@ -19,21 +48,16 @@ const NavbarComponent = ({ isLoggedIn }) => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="d-flex align-items-center">
-              {isLoggedIn ? (
-                <Nav.Link href="/home">Beranda</Nav.Link>
-              ) : (
-                <Nav.Link href="/">Beranda</Nav.Link>
-              )}
-
+              <Nav.Link href="/">Beranda</Nav.Link>
               <NavDropdown title="Ruangan" id="basic-nav-dropdown">
-                <NavDropdown.Item href="/ruang-meeting">
+                <NavDropdown.Item as={Link} to="/ruangan/ruang-meeting">
                   Ruangan Meeting
                 </NavDropdown.Item>
-                <NavDropdown.Item href="/ruang-acara">
+                <NavDropdown.Item as={Link} to="/ruangan/ruang-acara">
                   Ruang Acara
                 </NavDropdown.Item>
               </NavDropdown>
-              <Nav.Link href="/cospace">Coworking</Nav.Link>
+              <Nav.Link as={Link} to="/ruangan/ruang-coworking">Coworking</Nav.Link>
 
               {isLoggedIn ? (
                 <>
@@ -43,12 +67,14 @@ const NavbarComponent = ({ isLoggedIn }) => {
                       <FontAwesomeIcon icon={faCircleUser} />
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
-                      <Dropdown.Item href="/">Log Out</Dropdown.Item>
+                      <Dropdown.Item type="button" onClick={handleLogout}>Log Out</Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
                 </>
               ) : (
-                <Link to="/login" className="btn btn-teal">Login</Link>
+                <Link to="/login" className="btn btn-teal">
+                  Login
+                </Link>
               )}
             </Nav>
           </Navbar.Collapse>

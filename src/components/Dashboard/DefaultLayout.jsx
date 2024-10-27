@@ -31,7 +31,7 @@ const DefaultLayout = ({children}) => {
         <Navbar className="border-bottom bg-white p-3">
           <Container fluid>
             <Navbar.Collapse className="justify-content-end">
-              <Link to="" className="btn btn-teal">
+              <Link to="/" className="btn btn-teal">
                 Logout
               </Link>
             </Navbar.Collapse>
