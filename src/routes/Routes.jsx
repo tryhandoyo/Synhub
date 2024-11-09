@@ -28,6 +28,7 @@ import BankPage from "../pages/Dashboard/banks/BankPage";
 import CreateBankPage from "../pages/Dashboard/banks/CreateBankPage";
 import EditBankPage from "../pages/Dashboard/banks/EditBankPage";
 import PrivateRoutes from "./PrivateRoutes";
+import PrivateAdminRoutes from "./PrivateAdminRoutes";
 
 function RouteIndex() {
   return (
@@ -44,29 +45,151 @@ function RouteIndex() {
             </PrivateRoutes>
           }
         />
-        <Route path="/register" Component={RegisterPage} />
-        <Route path="/order" Component={OrderPage} />
-        <Route path="/payment" Component={PaymentPage} />
-        <Route path="/success" Component={SuccessPage} />
+        <Route
+          path="/register"
+          element={
+            <PrivateRoutes>
+              <RegisterPage />
+            </PrivateRoutes>
+          }
+        />
+        <Route
+          path="/order"
+          element={
+            <PrivateRoutes>
+              <OrderPage />
+            </PrivateRoutes>
+          }
+        />
+        <Route
+          path="/payment/:kodePesanan"
+          element={
+            <PrivateRoutes>
+              <PaymentPage />
+            </PrivateRoutes>
+          }
+        />
+        <Route
+          path="/success/:kodePesanan"
+          element={
+            <PrivateRoutes>
+              <SuccessPage />
+            </PrivateRoutes>
+          }
+        />
 
         {/* ==========routes dashboard=========== */}
-        <Route path="/admin/dashboard" element={<DashboardPage />} />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <PrivateAdminRoutes>
+              <DashboardPage />
+            </PrivateAdminRoutes>
+          }
+        />
+
         {/* user folder */}
-        <Route path="/admin/user" element={<UserPage />} />
-        <Route path="/admin/user/new" element={<CreateUserPage />} />
-        <Route path="/admin/user/:id" element={<EditUserPage />} />
+        <Route
+          path="/admin/user"
+          element={
+            <PrivateAdminRoutes>
+              <UserPage />
+            </PrivateAdminRoutes>
+          }
+        />
+        <Route
+          path="/admin/user/new"
+          element={
+            <PrivateAdminRoutes>
+              <CreateUserPage />
+            </PrivateAdminRoutes>
+          }
+        />
+        <Route
+          path="/admin/user/:id"
+          element={
+            <PrivateAdminRoutes>
+              <EditUserPage />
+            </PrivateAdminRoutes>
+          }
+        />
+
         {/* fasilitas folder */}
-        <Route path="/admin/facility" element={<FacilityPage />} />
-        <Route path="/admin/facility/new" element={<CreateFacilityPage />} />
-        <Route path="/admin/facility/:id" element={<EditFacilityPage />} />
+        <Route
+          path="/admin/facility"
+          element={
+            <PrivateAdminRoutes>
+              <FacilityPage />
+            </PrivateAdminRoutes>
+          }
+        />
+        <Route
+          path="/admin/facility/new"
+          element={
+            <PrivateAdminRoutes>
+              <CreateFacilityPage />
+            </PrivateAdminRoutes>
+          }
+        />
+        <Route
+          path="/admin/facility/:id"
+          element={
+            <PrivateAdminRoutes>
+              <EditFacilityPage />
+            </PrivateAdminRoutes>
+          }
+        />
         {/* banner folder */}
-        <Route path="/admin/banner" element={<BannerPage />} />
-        <Route path="/admin/banner/new" element={<CreateBannerPage />} />
-        <Route path="/admin/banner/:id" element={<EditBannerPage />} />
+        <Route
+          path="/admin/banner"
+          element={
+            <PrivateAdminRoutes>
+              <BannerPage />
+            </PrivateAdminRoutes>
+          }
+        />
+        <Route
+          path="/admin/banner/new"
+          element={
+            <PrivateAdminRoutes>
+              <CreateBannerPage />
+            </PrivateAdminRoutes>
+          }
+        />
+        <Route
+          path="/admin/banner/:id"
+          element={
+            <PrivateAdminRoutes>
+              <EditBannerPage />
+            </PrivateAdminRoutes>
+          }
+        />
+
         {/* bank folder */}
-        <Route path="/admin/bank" element={<BankPage />} />
-        <Route path="/admin/bank/new" element={<CreateBankPage />} />
-        <Route path="/admin/bank/:id" element={<EditBankPage />} />
+        <Route
+          path="/admin/bank"
+          element={
+            <PrivateAdminRoutes>
+              <BankPage />
+            </PrivateAdminRoutes>
+          }
+        />
+        <Route
+          path="/admin/bank/new"
+          element={
+            <PrivateAdminRoutes>
+              <CreateBankPage />
+            </PrivateAdminRoutes>
+          }
+        />
+        <Route
+          path="/admin/bank/:id"
+          element={
+            <PrivateAdminRoutes>
+              <EditBankPage />
+            </PrivateAdminRoutes>
+          }
+        />
       </Routes>
     </>
   );

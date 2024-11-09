@@ -1,20 +1,25 @@
 import NavbarComponent from "../../components/Customer/NavbarComponent";
 
-import { Container, Row, Col } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Container, Row, Col, Card } from "react-bootstrap";
+import { Link, useParams } from "react-router-dom";
 
 const SuccessPage = () => {
+  const { kodePesanan } = useParams();
   return (
     <>
       <NavbarComponent isLoggedIn={true} />
       <div id="success">
         <Container>
           <Row>
-            <Col lg={8}>
+            <Col lg={10}>
               <div className="bg-kode-reservasi mt-5">
                 <Row>
                   <Col lg={4}>
-                    <img src="../../src/assets/img-sukses.png" alt=""  width="80%"/>
+                    <img
+                      src="../../src/assets/img-sukses.png"
+                      alt=""
+                      width="80%"
+                    />
                   </Col>
                   <Col lg={8}>
                     <h1>Horee!! Pesanan Telah Berhasil</h1>
@@ -22,9 +27,11 @@ const SuccessPage = () => {
                       Silahkan Ambil Screenshot Kode Reservasi dibawah ini untuk
                       ditunjukkan ke resepsionis :
                     </p>
-                    <div className="kode-reservasi">
-                      <h2>SYB1234567</h2>
-                    </div>
+                    <Card className="bg-warning text-white text-center">
+                      <Card.Body>
+                        <h4>{kodePesanan}</h4>
+                      </Card.Body>
+                    </Card>
                   </Col>
                 </Row>
               </div>

@@ -171,14 +171,14 @@ const RuanganPage = () => {
       },
     })
       .then((response) => {
-        // console.log(response.data.message);
+        // console.log(response.data);
         if (response.status == 201) {
           toast.success(response.data.message, {
             duration: 3000,
             position: "top-center",
           });
 
-          navigate("/payment");
+          navigate(`/payment/${response.data.data}`);
         }
       })
 
@@ -283,7 +283,6 @@ const RuanganPage = () => {
                       aria-label="sampai"
                       disabled={!waktuMulai}
                       onChange={(e) => setWaktuSelesai(e.target.value)}
-
                     >
                       <option>--</option>
                       {availableEndTimes.map((time, index) => (
@@ -306,8 +305,12 @@ const RuanganPage = () => {
                 <Col lg={8}>
                   <Form.Group>
                     <Form.Label>Ada Kebutuhan Lain</Form.Label>
-                    <Form.Control as="textarea" rows={3} name="deskripsi" 
-                    onChange={(e) => setKeterangan(e.target.value)}/>
+                    <Form.Control
+                      as="textarea"
+                      rows={3}
+                      name="deskripsi"
+                      onChange={(e) => setKeterangan(e.target.value)}
+                    />
                     {validation.keterangan && (
                       <div className="text-danger" role="alert">
                         <FontAwesomeIcon icon={faCircleExclamation} />
@@ -502,6 +505,15 @@ const RuanganPage = () => {
     }
   };
 
+  const handlePembayaran = (e) => {
+    if (e.target.value) {
+      setSelectPembayaran(JSON.parse(e.target.value));
+      setPembayaran(JSON.parse(e.target.value).id);
+    } else {
+      setPembayaran("");
+    }
+  };
+
   useEffect(() => {
     getDetailDataProduk();
     getDataPembayaran();
@@ -509,7 +521,7 @@ const RuanganPage = () => {
 
   return (
     <>
-      <NavbarComponent isLoggedIn={true} />
+      <NavbarComponent isLoggedIn={Cookies} />
       <div id="banner">
         <Container>
           <Row>
@@ -594,12 +606,11 @@ const RuanganPage = () => {
                     <Form.Label>Metode Pembayaran</Form.Label>
                     <Form.Select
                       aria-label="pembayaran"
-                      onChangeCapture={(e) => setPembayaran(e.target.value)}
-                      required
+                      onChange={handlePembayaran}
                     >
-                      <option>--Pilih Metode Bayar--</option>
+                      <option value="">--Pilih Metode Bayar--</option>
                       {bayar.map((item, index) => (
-                        <option key={index} value={item.id}>
+                        <option key={index} value={JSON.stringify(item)}>
                           {item.nama_pembayaran}
                         </option>
                       ))}
@@ -611,19 +622,22 @@ const RuanganPage = () => {
                       </div>
                     )}
                   </Form.Group>
+                </Col>
+                <Col lg={4}>
                   {pembayaran ? (
                     <>
                       <img
-                        src="../src/assets/ic-bca.png"
+                        src={selectPembayaran.logo}
                         alt="Logo Bank"
                         className="mb-2 mt-3"
                         width={120}
                       />
                       <h6>
-                        Nomor Rekening : <b>123456789</b>
+                        Nomor Rekening :{" "}
+                        <b>{selectPembayaran.nomor_rekening}</b>
                       </h6>
                       <h5>
-                        <b>a.n Synhub Space</b>
+                        <b>a.n {selectPembayaran.nama_orang}</b>
                       </h5>
                     </>
                   ) : (

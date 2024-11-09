@@ -40,7 +40,14 @@ const LoginPage = () => {
           duration: 3000,
           position: "top-center",
         });
-        navigate("/");
+
+        if (res.data.role == "customer") {
+          navigate("/");
+        }
+
+        if (res.data.role == "admin") {
+          navigate("/admin/dashboard")
+        }
       })
 
       .catch((error) => {

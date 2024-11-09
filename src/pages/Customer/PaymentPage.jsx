@@ -1,14 +1,92 @@
 import NavbarComponent from "../../components/Customer/NavbarComponent";
 
 import { Container, Row, Col, Form } from "react-bootstrap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import Cookies from "js-cookie";
+import Api from "../../api";
+import { useNavigate, useParams } from "react-router-dom";
+
+import toast from "react-hot-toast";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 
 const PaymentPage = () => {
-  const [paymentMethod, setPaymentMethod] = useState("");
+  const [pesanan, setPesanan] = useState({});
+  const [image, setImage] = useState("");
+  const [sourceImage, setSourceImage] = useState("");
+  const token = Cookies.get("token");
+  const { kodePesanan } = useParams();
 
-  const handlePaymentMethodChange = (e) => {
-    setPaymentMethod(e.target.value);
+  const [validation, setValidation] = useState({});
+
+  const navigate = useNavigate();
+
+  const getDetailDataPesanan = async () => {
+    await Api.get(`/customer/pesanan/${kodePesanan}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        // console.log(res.data);
+        setPesanan(res.data);
+      })
+      .catch((err) => {
+        // console.log(err.response.data);
+        setValidation(err.res.data);
+      });
   };
+
+  const handleFileImage = (e) => {
+    const imageData = e.target.files[0];
+
+    if (!imageData.type.match("image.*")) {
+      setImage("");
+      toast.error("Maaf, Format Tidak Sesuai !", {
+        duration: 3000,
+        position: "top-center",
+      });
+
+      return;
+    }
+    //ini adalah useState variable image yang akan digunakan untuk form data
+    setImage(e.target.files[0]);
+    //ini adalah useState untuk variable sourceImage yang akan digunakan untuk src menampilkan file
+    setSourceImage(URL.createObjectURL(e.target.files[0]));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("foto", image);
+    formData.append("kode_pesanan", kodePesanan);
+
+    await Api.post("/customer/upload-bukti-pesanan", formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        // console.log(res.data);
+        if(res.status == 202) {
+          toast.success(res.data.message, {
+            duration: 3000,
+            position: 'top-center'
+          })
+          navigate(`/success/${kodePesanan}`);
+        }
+      })
+      .catch((err) => {
+        // console.log(err.response.data);
+        setValidation(err.response.data)
+      });
+  };
+
+  useEffect(() => {
+    getDetailDataPesanan();
+  }, []);
 
   return (
     <>
@@ -22,15 +100,15 @@ const PaymentPage = () => {
           </Row>
 
           <div className="form-bayar">
-            <form action="/success">
+            
               <Row>
                 <Col lg={4}>
                   <Form.Group>
-                    <Form.Label>Nama Pemesan</Form.Label>
+                    <Form.Label>Kode Pesanan</Form.Label>
                     <Form.Control
                       type="text"
-                      name="nama-pemesan"
-                      value="Ahmad Fulan"
+                      name="kode-pesanan"
+                      value={pesanan.kode_pesanan}
                       disabled
                     />
                   </Form.Group>
@@ -41,7 +119,7 @@ const PaymentPage = () => {
                     <Form.Control
                       type="text"
                       name="tanggalPemesanan"
-                      value="01/08/2024"
+                      value={pesanan.created_at}
                       disabled
                     />
                   </Form.Group>
@@ -54,18 +132,32 @@ const PaymentPage = () => {
                     <Form.Control
                       type="text"
                       name="ruangan"
-                      value="Ruang Meeting"
+                      value={pesanan.produk?.judul_pendek}
                       disabled
                     />
                   </Form.Group>
                 </Col>
                 <Col lg={4}>
                   <Form.Group>
-                    <Form.Label>Waktu/Total Jam</Form.Label>
+                    <Form.Label>Total Waktu</Form.Label>
                     <Form.Control
                       type="text"
                       name="waktu"
-                      value="09.00/3 Jam"
+                      value={pesanan.durasi + " " + pesanan.produk?.satuan}
+                      disabled
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col lg={4}>
+                  <Form.Group>
+                    <Form.Label>Metode Pembayaran</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="waktu"
+                      value={pesanan.bayar?.nama_pembayaran}
                       disabled
                     />
                   </Form.Group>
@@ -76,55 +168,31 @@ const PaymentPage = () => {
                 <Col>
                   <label htmlFor="total-bayar">Total Bayar</label>
                   <h5>
-                    <b>IDR 80.000 x 3 jam : IDR 240.000</b>
+                    <b>
+                      IDR {pesanan.produk?.harga} x{" "}
+                      {pesanan.durasi + " " + pesanan.produk?.satuan} = IDR{" "}
+                      {pesanan.produk?.harga * pesanan.durasi}
+                    </b>
                   </h5>
                 </Col>
               </Row>
-
+              
+              <form onSubmit={handleSubmit}>
               <Row>
-                <Col lg={4}>
+                <Col lg={8}>
+                  {sourceImage ? <img src={sourceImage} width={100} /> : <></>}
                   <Form.Group>
-                    <Form.Label>Metode Pembayaran</Form.Label>
-                    <Form.Select
-                      aria-label="pembayaran"
-                      required
-                      onChange={handlePaymentMethodChange}
-                    >
-                      <option value="">Pilih Metode Bayar</option>
-                      <option value="Cash">Cash</option>
-                      <option value="Transfer Bank">Transfer Bank</option>
-                    </Form.Select>
+                    <Form.Label>Upload Bukti Bayar</Form.Label>
+                    <Form.Control type="file" onChange={handleFileImage} />
+                    {validation.foto && (
+                      <p className="text-danger">
+                        <FontAwesomeIcon icon={faCircleExclamation} />
+                        {validation.foto}
+                      </p>
+                    )}
                   </Form.Group>
-
-                  {paymentMethod === "Transfer Bank" && (
-                    <>
-                      <img
-                        src="../src/assets/ic-bca.png"
-                        alt="Logo Bank"
-                        className="mb-2 mt-3"
-                        width={120}
-                      />
-                      <h6>
-                        Nomor Rekening : <b>123456789</b>
-                      </h6>
-                      <h5>
-                        <b>a.n Synhub Space</b>
-                      </h5>
-                    </>
-                  )}
                 </Col>
               </Row>
-
-              {paymentMethod === "Transfer Bank" && (
-                <Row>
-                  <Col lg={8}>
-                    <Form.Group>
-                      <Form.Label>Upload Bukti Bayar</Form.Label>
-                      <Form.Control type="file" name="buktiBayar" required />
-                    </Form.Group>
-                  </Col>
-                </Row>
-              )}
 
               <Row>
                 <Col lg={8}>
