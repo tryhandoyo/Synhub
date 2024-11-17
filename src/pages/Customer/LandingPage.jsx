@@ -19,7 +19,8 @@ const LandingPage = () => {
   const [banner_4, setBanner_4] = useState({});
 
   const getDataBanner = async () => {
-    await Api.get("/customer/banner").then((res) => {
+    await Api.get("/customer/banner")
+    .then((res) => {
       // console.log(res.data);
       setBanner_1(res.data.find((item) => item.posisi == "1"));
       setBanner_2(res.data.find((item) => item.posisi == "2"));
@@ -29,7 +30,8 @@ const LandingPage = () => {
   };
 
   const getDataProduk = async () => {
-    await Api.get("/customer/produk").then((res) => {
+    await Api.get("/customer/produk")
+    .then((res) => {
       // console.log(response.data);
       setProduk(res.data);
     });

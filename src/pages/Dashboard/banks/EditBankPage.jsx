@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 
 const EditBankPage = () => {
   const navigate = useNavigate();
-  const { id }= useParams();
+  const { id } = useParams();
   const token = Cookies.get("token");
 
   const [logo, setLogo] = useState("");
@@ -28,21 +28,21 @@ const EditBankPage = () => {
     // console.log(id);
     await Api.get(`/dashboard/bayar/${id}`, {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     })
-    .then((res) => {
-      // console.log(res.data);
-      setLogo(res.data.logo);
-      setNamaPembayaran(res.data.nama_pembayaran);
-      setNomorRekening(res.data.nomor_rekening);
-      setPemilikRekening(res.data.nama_orang);
-      setStatus(res.data.status);
-    })
-    .catch((err) => {
-      console.log(err.response);
-    })
-  }
+      .then((res) => {
+        // console.log(res.data);
+        setLogo(res.data.logo);
+        setNamaPembayaran(res.data.nama_pembayaran);
+        setNomorRekening(res.data.nomor_rekening);
+        setPemilikRekening(res.data.nama_orang);
+        setStatus(res.data.status);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -74,8 +74,16 @@ const EditBankPage = () => {
         }
       })
       .catch((err) => {
-        // console.log(err.response);
-        setValidation(err.response.data);
+        if (err.status == 400) {
+          toast.error(err.response.message, {
+            duration: 3000,
+            position: "top-center",
+          });
+        }
+        if (err.status == 422) {
+          // console.log(err.response);
+          setValidation(err.response.data);
+        }
       });
   };
 
@@ -96,7 +104,7 @@ const EditBankPage = () => {
     //ini adalah useState untuk variable sourceImage yang akan digunakan untuk src menampilkan file
     setSourceLogo(URL.createObjectURL(e.target.files[0]));
   };
-  
+
   useEffect(() => {
     getDataBayar();
   }, []);
@@ -105,13 +113,15 @@ const EditBankPage = () => {
     <DefaultLayout>
       <h3>Edit Bank</h3>
       <Card className="p-3">
-      <Form onSubmit={handleSubmit}>
-          { sourceLogo ? <img src={sourceLogo} width={100} /> : (<img src={logo} width={100}/>)}
+        <Form onSubmit={handleSubmit}>
+          {sourceLogo ? (
+            <img src={sourceLogo} width={100} />
+          ) : (
+            <img src={logo} width={100} />
+          )}
           <Form.Group className="mb-2">
             <Form.Label>Upload Logo</Form.Label>
-            <Form.Control 
-            type="file"
-            onChange={handleFileImage} />
+            <Form.Control type="file" onChange={handleFileImage} />
             {validation.logo && (
               <p className="text-danger">
                 <FontAwesomeIcon icon={faCircleExclamation} />
@@ -168,22 +178,21 @@ const EditBankPage = () => {
           <Form.Group>
             <Form.Label>Status</Form.Label>
             <Form.Select
-            value={status}
-            aria-label="Default select example"
-            onChange={(e) => setStatus(e.target.value)}
-          >
-            
-            <option>Pilih Status</option>
-            <option value='y'>Show</option>
-            <option value='n'>Hide</option>
+              value={status}
+              aria-label="Default select example"
+              onChange={(e) => setStatus(e.target.value)}
+            >
+              <option>Pilih Status</option>
+              <option value="y">Show</option>
+              <option value="n">Hide</option>
 
-            {validation.status && (
-              <div className="text-danger" role="alert">
-                <FontAwesomeIcon icon={faCircleExclamation} />
-                {validation.status}
-              </div>
-            )}
-          </Form.Select>
+              {validation.status && (
+                <div className="text-danger" role="alert">
+                  <FontAwesomeIcon icon={faCircleExclamation} />
+                  {validation.status}
+                </div>
+              )}
+            </Form.Select>
           </Form.Group>
 
           <Button

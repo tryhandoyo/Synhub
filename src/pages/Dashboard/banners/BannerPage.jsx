@@ -54,6 +54,7 @@ const BannerPage = () => {
               <th>No</th>
               <th>Gambar</th>
               <th>Judul</th>
+              <th>Sub Judul</th>
               <th>Posisi</th>
               <th>Action</th>
             </tr>
@@ -66,10 +67,11 @@ const BannerPage = () => {
                   <img src={item.foto} width={100} alt="" />
                 </td>
                 <td>{item.judul}</td>
+                <td>{item.subjudul}</td>
                 <td>{item.posisi}</td>
                 <td>
                   <Link
-                    to="/admin/banner/:id"
+                    to={`/admin/banner/${item.id}`}
                     className="btn btn-info text-white btn-sm mb-1 me-1"
                   >
                     Edit
@@ -86,7 +88,7 @@ const BannerPage = () => {
           currentPage={currentPage}
           perPage={perPage}
           total={total}
-          onChange={(pageNumber) => getDataBayar(pageNumber)}
+          onChange={(pageNumber) => getDataBanner(pageNumber)}
           position="end"
         />
       </div>

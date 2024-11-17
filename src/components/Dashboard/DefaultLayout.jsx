@@ -14,16 +14,16 @@ const DefaultLayout = ({children}) => {
             Dashboard
           </Nav.Link>
           <Nav.Link className="text-dark" href="/admin/bank">
-            Bank
+            Pembayaran
           </Nav.Link>
           <Nav.Link className="text-dark" href="/admin/banner">
             Banner
           </Nav.Link>
           <Nav.Link className="text-dark" href="/admin/facility">
-            Facility
+            Produk
           </Nav.Link>
           <Nav.Link className="text-dark" href="/admin/user">
-            User
+            Pesanan
           </Nav.Link>
         </Nav>
       </aside>

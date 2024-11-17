@@ -54,8 +54,16 @@ const CreateBankPage = () => {
         }
       })
       .catch((err) => {
-        console.log(err.response);
-        setValidation(err.response.data);
+        if (err.status == 400) {
+          toast.error(err.response.message, {
+            duration: 3000,
+            position: "top-center",
+          });
+        }
+        if (err.status == 422) {
+          // console.log(err.response);
+          setValidation(err.response.data);
+        }
       });
   };
 
