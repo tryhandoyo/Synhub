@@ -1,10 +1,12 @@
 import DefaultLayout from "../../../components/Dashboard/DefaultLayout";
 import { Link } from "react-router-dom";
 import { Table, Button } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import { useEffect, useState, } from "react";
+import { useNavigate } from "react-router";
 import Api from "../../../api";
 import Cookies from "js-cookie";
 import PaginationComponent from "../PaginationComponent";
+import toast from "react-hot-toast";
 
 const BankPage = () => {
   const [bayar, setBayar] = useState([]);
@@ -12,6 +14,7 @@ const BankPage = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [total, setTotal] = useState(0);
 
+  const navigate = useNavigate();
   const token = Cookies.get("token");
 
   const getDataBayar = async (pageNumber) => {
@@ -32,6 +35,38 @@ const BankPage = () => {
 
       .catch((err) => {
         console.log(err.response);
+      });
+  };
+
+  const handleDelete = async (id) => {
+    await Api.delete(`/dashboard/bayar/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        // console.log(res.data);
+        if (res.status == 202) {
+          toast.success(res.data.message, {
+            duration: 3000,
+            position: "top-center",
+          });
+          // console.log("1")
+          // navigate("/admin/bank");
+          getDataBayar();
+        }
+      })
+      .catch((err) => {
+        // console.log(err);
+        if (err.status == 400) {
+          toast.error(err.response.message, {
+            duration: 3000,
+            position: "top-center",
+          });
+        }
+        if (err.status == 422) {
+          setValidation(err.response.data);
+        }
       });
   };
 
@@ -76,7 +111,10 @@ const BankPage = () => {
                   >
                     Edit
                   </Link>
-                  <Button className="btn-warning text-white btn-sm mb-1">
+                  <Button
+                    onClick={() => handleDelete(item.id)}
+                    className="btn-warning text-white btn-sm mb-1"
+                  >
                     Delete
                   </Button>
                 </td>

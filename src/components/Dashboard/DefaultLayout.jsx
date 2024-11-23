@@ -2,6 +2,8 @@ import { Container, Navbar, Nav } from "react-bootstrap";
 import logo from "../../assets/logo.png";
 import {Link} from 'react-router-dom'
 
+
+
 const DefaultLayout = ({children}) => {
   return (
     <div className="d-flex min-vh-100">

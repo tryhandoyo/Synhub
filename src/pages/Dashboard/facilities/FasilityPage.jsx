@@ -4,16 +4,13 @@ import { Table, Button } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import Api from "../../../api";
 import Cookies from "js-cookie";
-import PaginationComponent from "../PaginationComponent";
 
 const FasilityPage = () => {
   const [produk, setProduk] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
 
   const token = Cookies.get("token");
 
-  const getDataProduk = async (pageNumber) => {
-    const page = pageNumber ? pageNumber : currentPage;
+  const getDataProduk = async () => {
 
     await Api.get("/dashboard/produk", {
       headers: {
@@ -21,7 +18,7 @@ const FasilityPage = () => {
       },
     })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setProduk(res.data);
       })
 
